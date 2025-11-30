@@ -1,21 +1,11 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<h1>🍷 Bem-vindo à Adega</h1>
-
-<div style="display:flex; flex-wrap:wrap; gap:20px;">
-@foreach($products as $product)
-    <div style="border:1px solid #ccc; padding:10px; width:200px;">
-        <h3>{{ $product->name }}</h3>
-        <p>R$ {{ $product->price }}</p>
-        <form action="{{ route('cart.add') }}" method="POST">
-            @csrf
-            <input type="hidden" name="product_id" value="{{ $product->id }}">
-            <button type="submit">Adicionar ao carrinho</button>
-        </form>
+    <div class="max-w-7xl mx-auto p-6">
+        <h1>Bem-vindo à loja!</h1>
     </div>
-@endforeach
-</div>
-
-{{ $products->links() }}
-@endsection
+</x-app-layout>
