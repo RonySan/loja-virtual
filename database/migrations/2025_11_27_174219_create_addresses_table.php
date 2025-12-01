@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('zip');
             $table->string('country')->default('Brasil');
             $table->timestamps();
+            $table->string('slug')->nullable();
+
 });
 
     }

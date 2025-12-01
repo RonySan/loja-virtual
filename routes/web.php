@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\ProductAdminController;
+use App\Http\Controllers\Admin\CategoryAdminController;
 use Illuminate\Support\Facades\Route;
 
 // Home
@@ -17,13 +18,12 @@ Route::get('/produto/{slug}', [ProductController::class, 'show'])->name('product
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
-// Checkout (somente logado)
-Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-});
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-// ADMIN (somente admin)
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::resource('produtos', ProductAdminController::class);
+// ROTAS ADMIN (sem autenticação por enquanto)
+Route::prefix('admin')->group(function () {
+    Route::resource('produtos', ProductAdminController::class)->names('produtos');
+    Route::resource('categorias', CategoryAdminController::class)->names('categorias');
 });

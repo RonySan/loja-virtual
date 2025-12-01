@@ -23,7 +23,15 @@ class ProductAdminController extends Controller
 
     public function store(Request $request)
     {
-        Product::create($request->all());
+        $data = $request->all();
+
+        // 📌 Tratamento da imagem
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($data);
+
         return redirect()->route('produtos.index')->with('success', 'Produto criado!');
     }
 
@@ -35,7 +43,15 @@ class ProductAdminController extends Controller
 
     public function update(Request $request, Product $produto)
     {
-        $produto->update($request->all());
+        $data = $request->all();
+
+        // 📌 Se tiver imagem nova enviar
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $produto->update($data);
+
         return redirect()->route('produtos.index')->with('success', 'Produto atualizado!');
     }
 
