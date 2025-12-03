@@ -1,34 +1,56 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
+
+@section('title', 'Criar Produto')
 
 @section('content')
-<div class="max-w-3xl mx-auto bg-white p-6 shadow rounded">
-    <h2 class="text-xl font-semibold mb-4">Cadastrar Produto</h2>
 
-    <form action="{{ route('produtos.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+<h1>Criar Produto</h1>
 
-        <label class="block mb-2">Nome</label>
-        <input type="text" name="name" class="w-full border p-2 mb-4" required>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Ops!</strong> Existem erros no formulário.
+    </div>
+@endif
+<form action="{{ route('produtos.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-        <label class="block mb-2">Categoria</label>
-        <select name="category_id" class="w-full border p-2 mb-4" required>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+    <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Categoria</label>
+        <select name="category_id" class="form-control">
+            <option value="">Selecione</option>
+            @foreach ($categories as $c)
+                <option value="{{ $c->id }}">{{ $c->name }}</option>
             @endforeach
         </select>
+    </div>
 
-        <label class="block mb-2">Preço</label>
-        <input type="number" step="0.01" name="price" class="w-full border p-2 mb-4" required>
+    <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <textarea name="description" class="form-control">{{ old('description') }}</textarea>
+    </div>
 
-        <label class="block mb-2">Descrição</label>
-        <textarea name="description" class="w-full border p-2 mb-4"></textarea>
+    <div class="mb-3">
+        <label class="form-label">Preço (em reais)</label>
+        <input type="number" step="0.01" name="price_cents" class="form-control" required>
+    </div>
 
-        <label class="block mb-2">Imagem</label>
-        <input type="file" name="image" class="mb-4">
+    <div class="mb-3">
+        <label class="form-label">Estoque</label>
+        <input type="number" name="stock" class="form-control" required value="0">
+    </div>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-            Salvar
-        </button>
-    </form>
-</div>
+    <div class="mb-3">
+        <label class="form-label">Imagens (pode selecionar várias)</label>
+        <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+    </div>
+
+    <button class="btn btn-success">Salvar</button>
+    <a href="{{ route('produtos.index') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+
 @endsection

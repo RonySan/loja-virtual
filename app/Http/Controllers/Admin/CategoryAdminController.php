@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
-
-
 class CategoryAdminController extends Controller
 {
     public function index()
@@ -21,44 +19,48 @@ class CategoryAdminController extends Controller
     {
         return view('admin.categories.create');
     }
+
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-    $data['slug'] = Str::slug($data['name']);
+        $data['slug'] = Str::slug($data['name']);
 
-    Category::create($data);
+        Category::create($data);
 
-    return redirect()->route('categorias.index')->with('success', 'Categoria criada com sucesso!');
-}
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Category created successfully!');
+    }
 
     public function edit($id)
     {
         $category = Category::findOrFail($id);
         return view('admin.categories.edit', compact('category'));
     }
-
-   public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
-    $data = $request->validate([
+    $request->validate([
         'name' => 'required|string|max:255',
     ]);
 
-    $data['slug'] = Str::slug($data['name']); // Atualiza também o slug
-
     $category = Category::findOrFail($id);
-    $category->update($data);
 
-    return redirect()->route('categorias.index')->with('success', 'Categoria atualizada com sucesso!');
+    $category->name = $request->name;
+    $category->slug = \Str::slug($request->name);
+    $category->save();
+
+    return redirect()->route('admin.categories.index') // ou ->route('categorias.index') dependendo do seu nome de rota
+        ->with('success', 'Category updated successfully!');
 }
 
 
     public function destroy($id)
     {
         Category::destroy($id);
-        return redirect()->route('categorias.index')->with('success', 'Categoria excluída com sucesso!');
-    }
 
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Category deleted successfully!');
+    }
 }

@@ -17,7 +17,7 @@
             <a class="navbar-brand" href="{{ route('home') }}">Adega Store</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('categorias.index') }}">Categorias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categorias</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('produtos.index') }}">Produtos</a></li>
                 </ul>
             </div>

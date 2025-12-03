@@ -1,36 +1,98 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adega Store</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0b0b0b; /* Preto elegante */
+            color: #e5e5e5;     /* Prata */
+            font-family: Arial, sans-serif;
+        }
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        header {
+            background: #111;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #c9a100; /* Dourado */
+        }
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+        main {
+            padding: 25px;
+        }
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        h1, h2, h3 {
+            color: #c9a100; /* Dourado premium */
+        }
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        a {
+            color: #c9a100;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #e5e5e5;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            border: 1px solid #444;
+        }
+
+        th {
+            background: #111;
+            padding: 12px;
+            border-bottom: 2px solid #c9a100;
+            color: #c9a100;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        button {
+            background: #c9a100;
+            border: none;
+            color: #111;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #e5e5e5;
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+
+    @isset($header)
+        <header>
+            {{ $header }}
+        </header>
+    @endisset
+
+   <body>
+
+    @include('layouts.sidebar')
+
+    <main style="margin-left: 220px; padding: 25px;">
+        @yield('content')
+    </main>
+
+</body>
+
+
+</body>
 </html>

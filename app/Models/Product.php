@@ -13,10 +13,10 @@ class Product extends Model
         'category_id',
         'name',
         'slug',
-        'description',
-        'price_cents',
+        'price',
         'stock',
-        'active'
+        'description',
+        'active',
     ];
 
     public function category()
@@ -27,11 +27,5 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class);
-    }
-
-    // Exibir valor convertido para R$
-    public function getPriceAttribute()
-    {
-        return number_format($this->price_cents / 100, 2, ',', '.');
     }
 }

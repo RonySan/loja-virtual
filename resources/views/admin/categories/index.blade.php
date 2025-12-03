@@ -1,43 +1,38 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Categorias</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+<h1>Categories</h1>
 
-    <a href="{{ route('categorias.create') }}" class="btn btn-primary mb-3">+ Nova Categoria</a>
+<a href="{{ route('admin.categories.create') }}">Create Category</a>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Slug</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach($categories as $category)
-            <tr>
-                <td>{{ $category->id }}</td>
-                <td>{{ $category->name }}</td>
-                <td>{{ $category->slug }}</td>
-                <td>
-                    <a href="{{ route('categorias.edit', $category->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                    <form action="{{ route('categorias.destroy', $category->id) }}" method="POST" style="display:inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Tem certeza que deseja excluir?')" class="btn btn-danger btn-sm">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+@if(session('success'))
+    <div>{{ session('success') }}</div>
+@endif
 
-    {{ $categories->links() }}
-</div>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Slug</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach($categories as $category)
+    <tr>
+        <td>{{ $category->name }}</td>
+        <td>{{ $category->slug }}</td>
+        <td>
+            <a href="{{ route('admin.categories.edit', $category) }}">Edit</a>
+
+            <form action="{{ route('admin.categories.destroy', $category) }}"
+                  method="POST" style="display:inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    @endforeach
+</table>
+
 @endsection

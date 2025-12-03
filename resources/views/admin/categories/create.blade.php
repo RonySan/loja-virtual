@@ -1,28 +1,19 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Nova Categoria</h1>
+<h1>Create Category</h1>
 
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div>
-    @endif
+<form action="{{ route('admin.categories.store') }}" method="POST">
+    @csrf
 
-    <form action="{{ route('categorias.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="name">Nome da Categoria</label>
-            <input type="text" name="name" class="form-control" placeholder="Ex: Bebidas" required>
-        </div>
+    <label>Name:</label>
+    <input type="text" name="name" value="{{ old('name') }}">
 
-        <button type="submit" class="btn btn-success">Salvar</button>
-        <a href="{{ route('categorias.index') }}" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+    @error('name')
+        <div>{{ $message }}</div>
+    @enderror
+
+    <button type="submit">Save</button>
+</form>
+
 @endsection

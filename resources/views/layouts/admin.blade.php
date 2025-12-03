@@ -15,8 +15,8 @@
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">🏪 Adega Store</a>
             <div>
-                <a class="nav-link text-white" href="{{ route('categorias.index') }}">Categorias</a>
-                <a class="nav-link text-white" href="{{ route('produtos.index') }}">Produtos</a>
+                <a class="nav-link text-white" href="{{ route('categories.index') }}">Categorias</a>
+                <a class="nav-link text-white" href="{{ route('products.index') }}">Produtos</a>
             </div>
         </div>
     </nav>
