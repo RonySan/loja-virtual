@@ -19,6 +19,9 @@
         <a href="{{ route('admin.products.index') }}" style="padding: 10px 0; color: #e5e5e5;">Products</a>
         <a href="{{ route('admin.stock.index') }}" style="padding: 10px 0; color: #e5e5e5;">Stock</a>
         <a href="#" style="padding: 10px 0; color: #e5e5e5;">Sales</a>
-        <a href="#" style="padding: 10px 0; color: #e5e5e5;">Clients</a>
+        <a href="{{ route('admin.clients.index') }}" style="padding: 10px 0; color: #e5e5e5;">
+    Clientes
+</a>
+
     </nav>
 </aside>

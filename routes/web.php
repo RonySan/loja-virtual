@@ -45,4 +45,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/stock', [StockMovementAdminController::class, 'store'])->name('admin.stock.store');
 
 });
+Route::prefix('admin')->name('admin.')->group(function () {
+    // outras rotas...
+
+    Route::resource('clients', \App\Http\Controllers\Admin\ClientAdminController::class);
+});
+
 
