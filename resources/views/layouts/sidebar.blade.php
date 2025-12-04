@@ -15,10 +15,10 @@
     ">ADEGA STORE</h2>
 
     <nav style="display: flex; flex-direction: column; padding: 10px;">
-        <a href="{{ url('/admin/categorias') }}" style="padding: 10px 0; color: #e5e5e5;">Categorias</a>
-        <a href="{{ url('/admin/produtos') }}" style="padding: 10px 0; color: #e5e5e5;">Produtos</a>
-        <a href="{{ url('/admin/estoque') }}" style="padding: 10px 0; color: #e5e5e5;">Estoque</a>
-        <a href="#" style="padding: 10px 0; color: #e5e5e5;">Vendas</a>
-        <a href="#" style="padding: 10px 0; color: #e5e5e5;">Clientes</a>
+        <a href="{{ route('admin.categories.index') }}" style="padding: 10px 0; color: #e5e5e5;">Categories</a>
+        <a href="{{ route('admin.products.index') }}" style="padding: 10px 0; color: #e5e5e5;">Products</a>
+        <a href="{{ url('/admin/stock') }}" style="padding: 10px 0; color: #e5e5e5;">Stock</a>
+        <a href="#" style="padding: 10px 0; color: #e5e5e5;">Sales</a>
+        <a href="#" style="padding: 10px 0; color: #e5e5e5;">Clients</a>
     </nav>
 </aside>

@@ -1,56 +1,42 @@
-@extends('admin.layouts.app')
-
-@section('title', 'Produtos')
+@extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Produtos</h1>
-    <a href="{{ route('produtos.create') }}" class="btn btn-primary">+ Novo Produto</a>
-</div>
+<h1>Products</h1>
 
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+<a href="{{ route('admin.products.create') }}">+ New Product</a>
 
-<table class="table table-bordered">
+<table>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-            <th>Ativo</th>
-            <th>Ações</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th></th>
         </tr>
     </thead>
-    <tbody>
-        @forelse($products as $product)
-        <tr>
-            <td>{{ $product->id }}</td>
-            <td>{{ $product->name }}</td>
-            <td>{{ $product->category->name ?? 'Sem categoria' }}</td>
-            <td>R$ {{ number_format($product->price_cents / 100, 2, ',', '.') }}</td>
-            <td>{{ $product->active ? 'Sim' : 'Não' }}</td>
-            <td>
-                <a href="{{ route('produtos.edit', $product->id) }}" class="btn btn-warning btn-sm">Editar</a>
 
-                <form action="{{ route('produtos.destroy', $product->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button onclick="return confirm('Tem certeza?')" class="btn btn-danger btn-sm">
-                        Apagar
-                    </button>
+    <tbody>
+        @foreach ($products as $product)
+        <tr>
+            <td>{{ $product->name }}</td>
+            <td>{{ $product->category->name ?? '—' }}</td>
+            <td>{{ $product->price }}</td>
+            <td>{{ $product->stock }}</td>
+
+            <td>
+                <a href="{{ route('admin.products.edit', $product->id) }}">Edit</a>
+
+                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                    @csrf @method('DELETE')
+                    <button onclick="return confirm('Delete this product?')">Delete</button>
                 </form>
             </td>
         </tr>
-        @empty
-        <tr>
-            <td colspan="6">Nenhum produto encontrado.</td>
-        </tr>
-        @endforelse
+        @endforeach
     </tbody>
 </table>
-    
+
 {{ $products->links() }}
 
 @endsection

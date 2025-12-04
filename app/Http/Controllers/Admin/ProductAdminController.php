@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductAdminController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(10);
+        $products = Product::with('category')->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -22,67 +24,85 @@ class ProductAdminController extends Controller
     }
 
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'nullable|exists:categories,id',
-        'description' => 'nullable|string',
-        'price_cents' => 'required|numeric',
-        'stock' => 'required|integer',
-        'active' => 'boolean',
-        'images.*' => 'image|max:4096',
-    ]);
+    {
+        $data = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name'        => 'required|string|max:255',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
+            'description' => 'nullable|string',
+            'images.*'    => 'nullable|image|mimes:jpg,png,jpeg|max:4096',
+        ]);
 
-    // converter reais → centavos
-    $data['price_cents'] = (int) ($data['price_cents'] * 100);
+        $data['slug'] = Str::slug($data['name']);
 
-    $product = Product::create($data);
+        $product = Product::create($data);
 
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $index => $image) {
-            $path = $image->store('products', 'public');
-
-            $product->images()->create([
-                'path' => $path,
-                'order' => $index
-            ]);
+        // Save images
+        if ($request->hasFile('images')) {
+            foreach ($request->images as $image) {
+                $path = $image->store('products', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path'       => $path,
+                ]);
+            }
         }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product created successfully!');
     }
-
-    return redirect()->route('produtos.index')
-                     ->with('success', 'Produto criado!');
-}
-
 
     public function edit(Product $product)
-{
-    $categories = Category::all();
-    return view('admin.products.edit', compact('product', 'categories'));
-}
+    {
+        $categories = Category::all();
 
-public function update(Request $request, Product $product)
-{
-     // ✅ Validação entra aqui também
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'category_id' => 'required|exists:categories,id',
-        'image' => 'nullable|image|max:2048',
-    ]);
-    $data = $request->all();
-
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('products', 'public');
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    $product->update($data);
+    public function update(Request $request, Product $product)
+    {
+        $data = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name'        => 'required|string|max:255',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
+            'description' => 'nullable|string',
+            'images.*'    => 'nullable|image|mimes:jpg,png,jpeg|max:4096',
+        ]);
 
-    return redirect()->route('produtos.index')->with('success', 'Produto atualizado!');
-}
+        $data['slug'] = Str::slug($data['name']);
 
-public function destroy(Product $product)
-{
-    $product->delete();
-    return back()->with('success', 'Produto apagado!');
-}
+        $product->update($data);
+
+        // Save new images
+        if ($request->hasFile('images')) {
+            foreach ($request->images as $image) {
+                $path = $image->store('products', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path'       => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product updated successfully!');
+    }
+
+    public function destroy(Product $product)
+    {
+        // Delete images from storage
+        foreach ($product->images as $img) {
+            if (file_exists(public_path("storage/" . $img->path))) {
+                unlink(public_path("storage/" . $img->path));
+            }
+            $img->delete();
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product deleted successfully!');
+    }
 }

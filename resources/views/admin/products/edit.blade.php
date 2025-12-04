@@ -1,69 +1,42 @@
-@extends('admin.layouts.app')
-
-@section('title', 'Editar Produto')
+@extends('layouts.app')
 
 @section('content')
+<h1>Edit Product</h1>
 
-<h1>Editar Produto</h1>
-
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <strong>Ops!</strong> Existem erros no formulário.
-    </div>
-@endif
-
-<form action="{{ route('produtos.update', $produto->id) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
-    <div class="mb-3">
-        <label class="form-label">Nome</label>
-        <input type="text" name="name" class="form-control" required value="{{ $produto->name }}">
-    </div>
+    <label>Category</label>
+    <select name="category_id" required>
+        @foreach ($categories as $c)
+            <option value="{{ $c->id }}" @selected($product->category_id == $c->id)>
+                {{ $c->name }}
+            </option>
+        @endforeach
+    </select>
 
-    <div class="mb-3">
-        <label class="form-label">Categoria</label>
-        <select name="category_id" class="form-control" required>
-            @foreach ($categories as $c)
-                <option value="{{ $c->id }}" {{ $produto->category_id == $c->id ? 'selected' : '' }}>
-                    {{ $c->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+    <label>Name</label>
+    <input type="text" name="name" value="{{ $product->name }}" required>
 
-    <div class="mb-3">
-        <label class="form-label">Descrição</label>
-        <textarea name="description" class="form-control">{{ $produto->description }}</textarea>
-    </div>
+    <label>Price</label>
+    <input type="number" name="price" value="{{ $product->price }}" step="0.01" required>
 
-    <div class="mb-3">
-        <label class="form-label">Preço (em reais)</label>
-        <input type="number" step="0.01" name="price" class="form-control"
-            value="{{ $produto->price_cents / 100 }}">
-    </div>
+    <label>Stock</label>
+    <input type="number" name="stock" value="{{ $product->stock }}" required>
 
-    <div class="mb-3">
-        <label class="form-label">Estoque</label>
-        <input type="number" name="stock" class="form-control" value="{{ $produto->stock }}">
-    </div>
+    <label>Description</label>
+    <textarea name="description">{{ $product->description }}</textarea>
 
-    <div class="mb-3">
-        <label class="form-label">Imagem atual</label><br>
-        @if ($produto->image)
-            <img src="{{ asset('storage/' . $produto->image) }}" width="120">
-        @else
-            <p>Nenhuma imagem enviada.</p>
-        @endif
-    </div>
+    <h3>Existing Images</h3>
+    @foreach ($product->images as $img)
+        <img src="{{ asset('storage/' . $img->path) }}" width="80">
+    @endforeach
 
-    <div class="mb-3">
-        <label class="form-label">Nova imagem (opcional)</label>
-        <input type="file" name="image" class="form-control" accept="image/*">
-    </div>
+    <label>Add new images</label>
+    <input type="file" name="images[]" multiple>
 
-    <button class="btn btn-success">Salvar Alterações</button>
-    <a href="{{ route('produtos.index') }}" class="btn btn-secondary">Cancelar</a>
+    <button type="submit">Save</button>
 </form>
 
 @endsection
