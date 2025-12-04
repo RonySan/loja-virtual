@@ -28,4 +28,18 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function stockMovements()
+{
+    return $this->hasMany(StockMovement::class);
+}
+
+    public function getCalculatedStockAttribute()
+{
+    $in = $this->stockMovements()->where('type', 'in')->sum('quantity');
+    $out = $this->stockMovements()->where('type', 'out')->sum('quantity');
+
+    return $in - $out;
+}
+
 }

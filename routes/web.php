@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\ProductAdminController;
 use App\Http\Controllers\Admin\CategoryAdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\StockMovementAdminController;
 
 // PUBLIC ROUTES
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -35,3 +36,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('products', ProductAdminController::class)->names('products');
 });
+
+
+Route::prefix('admin')->group(function () {
+
+    Route::get('/stock', [StockMovementAdminController::class, 'index'])->name('admin.stock.index');
+    Route::get('/stock/create', [StockMovementAdminController::class, 'create'])->name('admin.stock.create');
+    Route::post('/stock', [StockMovementAdminController::class, 'store'])->name('admin.stock.store');
+
+});
+
